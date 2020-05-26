@@ -16,12 +16,22 @@ jobs:
           - { codecov-flag: GHA_Ubuntu_16, os: ubuntu-16.04 }
           - { codecov-flag: GHA_macOS, os: macos-latest }
           - { codecov-flag: GHA_Windows, os: windows-latest }
+          # 3.9-dev
+          - { python-version: 3.9-dev, os: ubuntu-18.04 }
+          - { python-version: 3.9-dev, os: ubuntu-16.04 }
 
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Python ${{ matrix.python }} (deadsnakes)
+        uses: deadsnakes/action@v1.0.0
+        if: matrix.python-version == '3.9-dev'
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        if: matrix.python-version != '3.9-dev'
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
